@@ -8,11 +8,11 @@ FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
 
 # Copy pom.xml first (leverage Docker cache for dependency downloads)
-COPY pom.xml .
+COPY attendance-system/backend/pom.xml .
 RUN mvn dependency:go-offline -B
 
 # Copy source and build
-COPY src ./src
+COPY attendance-system/backend/src ./src
 RUN mvn clean package -DskipTests -B
 
 # --- Stage 2: Runtime ---
