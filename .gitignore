@@ -1,0 +1,46 @@
+# ===========================================
+# .gitignore for Attendance System Monorepo
+# ===========================================
+
+# ---- NEVER commit secrets ----
+*.env
+.env
+.env.local
+.env.production
+secrets.properties
+# application-local.properties (use this for local overrides)
+application-local.properties
+
+# ---- Spring Boot / Maven ----
+attendance-system/backend/target/
+attendance-system/backend/.mvn/wrapper/maven-wrapper.jar
+!attendance-system/backend/.mvn/wrapper/maven-wrapper.properties
+
+# ---- IDE files ----
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+
+# ---- Flutter / Dart ----
+attendance-system/flutter/.dart_tool/
+attendance-system/flutter/.packages
+attendance-system/flutter/build/
+attendance-system/flutter/.flutter-plugins
+attendance-system/flutter/.flutter-plugins-dependencies
+attendance-system/flutter/android/.gradle/
+attendance-system/flutter/android/local.properties
+attendance-system/flutter/android/key.properties
+attendance-system/flutter/ios/Pods/
+attendance-system/flutter/ios/.symlinks/
+attendance-system/flutter/ios/Flutter/Flutter.framework/
+attendance-system/flutter/ios/Flutter/Flutter.podspec
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+desktop.ini
+*.zip

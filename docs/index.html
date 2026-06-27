@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline Attendance System | Final Year Project</title>
+  <meta name="description" content="An offline-first, LAN-based mobile attendance management system built with Spring Boot, Flutter, MySQL & SQLite. Final Year Project by Karan Perumal." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ─── NAV ─────────────────────────────────────────────── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon">🎓</span>
+        <span>AttendanceOS</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#api-demo">Live API</a></li>
+        <li><a href="#tech-stack">Tech Stack</a></li>
+        <li>
+          <a href="https://github.com/KARANPERUMAL/Offline-Attendance-System_Final-Year-Project" target="_blank" class="btn-github">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────────────────── -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <div class="hero-orb orb-1"></div>
+      <div class="hero-orb orb-2"></div>
+      <div class="hero-orb orb-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <div class="badge animate-in" style="--delay:0s">
+        <span class="badge-dot"></span> Final Year Project — 2025
+      </div>
+      <h1 class="hero-title animate-in" style="--delay:0.1s">
+        Offline-First<br />
+        <span class="gradient-text">Attendance System</span>
+      </h1>
+      <p class="hero-sub animate-in" style="--delay:0.2s">
+        A LAN-based mobile attendance management system that works completely <strong>without internet</strong>.
+        Teachers generate OTPs, students mark attendance over local WiFi — then sync to the cloud when online.
+      </p>
+      <div class="hero-ctas animate-in" style="--delay:0.3s">
+        <a href="#api-demo" class="btn-primary">
+          <span>🚀</span> Try Live API
+        </a>
+        <a href="https://github.com/KARANPERUMAL/Offline-Attendance-System_Final-Year-Project" target="_blank" class="btn-outline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          View Source
+        </a>
+      </div>
+      <div class="hero-stats animate-in" style="--delay:0.4s">
+        <div class="stat"><span class="stat-num">3</span><span class="stat-label">User Roles</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Offline-Ready</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">JWT</span><span class="stat-label">Secured API</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">OTP</span><span class="stat-label">Based Auth</span></div>
+      </div>
+    </div>
+    <div class="hero-phone-wrapper animate-in" style="--delay:0.3s">
+      <div class="phone-mockup">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="app-screen">
+            <div class="app-logo-area">
+              <div class="app-icon">🎓</div>
+              <div class="app-name">Attendance System</div>
+              <div class="app-tagline">Offline LAN-Based</div>
+            </div>
+            <div class="app-card">
+              <div class="app-card-title">Sign In</div>
+              <div class="app-input">
+                <span class="input-icon">👤</span>
+                <span class="input-text">Username</span>
+              </div>
+              <div class="app-input">
+                <span class="input-icon">🔒</span>
+                <span class="input-text">Password</span>
+              </div>
+              <div class="app-server-row">
+                <span class="server-label">Server URL</span>
+                <div class="app-input server-input">
+                  <span class="input-icon">🖥️</span>
+                  <span class="input-text typing-text" id="typingText">http://192.168.1.1:8080</span>
+                </div>
+              </div>
+              <div class="app-btn">Login</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-home-bar"></div>
+      </div>
+      <!-- floating badges -->
+      <div class="float-badge badge-flutter">Flutter 🐦</div>
+      <div class="float-badge badge-spring">Spring Boot 🍃</div>
+      <div class="float-badge badge-offline">📶 Works Offline</div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES ─────────────────────────────────────────── -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">What It Does</span>
+        <h2 class="section-title">Packed with Smart Features</h2>
+        <p class="section-sub">Built to solve a real-world problem — attendance management that doesn't depend on internet connectivity.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card feature-large">
+          <div class="feature-icon-wrap">📡</div>
+          <h3>100% Offline via LAN</h3>
+          <p>Teacher's phone acts as a local HTTP server on port 8181. Students connect over the same WiFi network — no internet required at all. Perfect for classrooms with poor connectivity.</p>
+          <div class="feature-tag">Core Feature</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🔢</div>
+          <h3>OTP-Based Attendance</h3>
+          <p>Teachers generate time-limited OTPs. Students enter the OTP to mark present — prevents proxy attendance.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">☁️</div>
+          <h3>Cloud Sync</h3>
+          <p>When internet is available, offline SQLite records sync to the central MySQL server via REST API.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🔐</div>
+          <h3>JWT Authentication</h3>
+          <p>Stateless JWT tokens with role-based access control — Admin, Teacher, and Student roles with different permissions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">📊</div>
+          <h3>Excel Export</h3>
+          <p>Admin can export attendance records as Excel spreadsheets using Apache POI for reports and analysis.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">📱</div>
+          <h3>Cross-Platform App</h3>
+          <p>Flutter app runs on both Android and iOS from a single codebase with SQLite local storage.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ARCHITECTURE ──────────────────────────────────────── -->
+  <section class="section section-dark" id="architecture">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">System Design</span>
+        <h2 class="section-title">Architecture Overview</h2>
+        <p class="section-sub">A two-layer architecture: offline LAN for real-time attendance + cloud for sync and admin.</p>
+      </div>
+      <div class="arch-diagram">
+        <div class="arch-layer arch-cloud">
+          <div class="arch-layer-label">☁️ Cloud Layer (Internet)</div>
+          <div class="arch-nodes">
+            <div class="arch-node node-spring">
+              <div class="node-icon">🍃</div>
+              <div class="node-name">Spring Boot API</div>
+              <div class="node-desc">:8080 — JWT REST</div>
+            </div>
+            <div class="arch-connector vertical"></div>
+            <div class="arch-node node-mysql">
+              <div class="node-icon">🗄️</div>
+              <div class="node-name">MySQL DB</div>
+              <div class="node-desc">Central Records</div>
+            </div>
+          </div>
+        </div>
+        <div class="arch-sync-arrow">
+          <div class="sync-label">Sync when online ↕</div>
+        </div>
+        <div class="arch-layer arch-lan">
+          <div class="arch-layer-label">📡 LAN Layer (Offline)</div>
+          <div class="arch-nodes">
+            <div class="arch-node node-teacher">
+              <div class="node-icon">👨‍🏫</div>
+              <div class="node-name">Teacher App</div>
+              <div class="node-desc">Hosts LAN server :8181</div>
+            </div>
+            <div class="arch-connector horizontal">
+              <span class="conn-label">OTP over WiFi</span>
+            </div>
+            <div class="arch-node node-student">
+              <div class="node-icon">👩‍🎓</div>
+              <div class="node-name">Student App</div>
+              <div class="node-desc">Connects to teacher LAN IP</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-num">1</div>
+          <div class="step-text">Teacher selects subject &amp; generates OTP in the app</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">2</div>
+          <div class="step-text">Phone starts local HTTP server — visible on same WiFi</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">3</div>
+          <div class="step-text">Students enter OTP to mark attendance via LAN</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-num">4</div>
+          <div class="step-text">Teacher syncs to cloud when internet is available</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── LIVE API DEMO ─────────────────────────────────────── -->
+  <section class="section" id="api-demo">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Live Demo</span>
+        <h2 class="section-title">Try the Live API</h2>
+        <p class="section-sub">The Spring Boot backend is deployed on Railway. Test the real endpoints below.</p>
+      </div>
+
+      <div class="api-demo-wrap">
+        <!-- Status Bar -->
+        <div class="api-status-bar">
+          <div class="api-status-indicator" id="apiStatusIndicator">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Checking API...</span>
+          </div>
+          <div class="api-base-url" id="apiBaseUrl">Loading...</div>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="api-tabs">
+          <button class="api-tab active" id="tab-health" onclick="switchTab('health')">GET /health</button>
+          <button class="api-tab" id="tab-login" onclick="switchTab('login')">POST /login</button>
+          <button class="api-tab" id="tab-admin" onclick="switchTab('admin')">GET /admin/stats</button>
+        </div>
+
+        <!-- Health Tab -->
+        <div class="api-panel" id="panel-health">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method get">GET</span>
+              <span class="endpoint">/api/auth/health</span>
+            </div>
+            <p class="req-desc">Check if the backend API is online and running.</p>
+            <button class="run-btn" onclick="runHealth()" id="healthBtn">▶ Run Request</button>
+          </div>
+          <div class="api-response" id="resp-health">
+            <div class="resp-placeholder">Click "Run Request" to call the live API →</div>
+          </div>
+        </div>
+
+        <!-- Login Tab -->
+        <div class="api-panel hidden" id="panel-login">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method post">POST</span>
+              <span class="endpoint">/api/auth/login</span>
+            </div>
+            <p class="req-desc">Login with demo admin credentials to get a JWT token.</p>
+            <div class="req-body-preview">
+              <span class="code-label">Request Body:</span>
+              <pre class="code-block">{
+  "username": "admin",
+  "password": "Admin@1234"
+}</pre>
+            </div>
+            <button class="run-btn" onclick="runLogin()" id="loginBtn">▶ Run Login</button>
+          </div>
+          <div class="api-response" id="resp-login">
+            <div class="resp-placeholder">Click "Run Login" to authenticate →</div>
+          </div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div class="api-panel hidden" id="panel-admin">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method get">GET</span>
+              <span class="endpoint">/api/admin/attendance/stats</span>
+            </div>
+            <p class="req-desc">Get attendance statistics. Requires JWT — login first!</p>
+            <div class="req-body-preview">
+              <span class="code-label">Step 1: Login above to get token</span><br/>
+              <span class="code-label">Step 2: Token is auto-used below</span>
+            </div>
+            <button class="run-btn" onclick="runAdminStats()" id="statsBtn">▶ Get Statistics</button>
+          </div>
+          <div class="api-response" id="resp-admin">
+            <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TECH STACK ────────────────────────────────────────── -->
+  <section class="section section-dark" id="tech-stack">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Built With</span>
+        <h2 class="section-title">Technology Stack</h2>
+      </div>
+      <div class="tech-grid">
+        <div class="tech-card">
+          <div class="tech-icon">🍃</div>
+          <div class="tech-name">Spring Boot 3.5</div>
+          <div class="tech-desc">Java 17 backend with REST API, JWT security, JPA</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🐦</div>
+          <div class="tech-name">Flutter</div>
+          <div class="tech-desc">Cross-platform mobile app — Android &amp; iOS from one codebase</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🗄️</div>
+          <div class="tech-name">MySQL 8.0</div>
+          <div class="tech-desc">Central cloud database for synced attendance records</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">📦</div>
+          <div class="tech-name">SQLite</div>
+          <div class="tech-desc">Local offline storage on teacher's and student's device</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🔐</div>
+          <div class="tech-name">JWT + Spring Security</div>
+          <div class="tech-desc">Stateless authentication with role-based access control</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🐳</div>
+          <div class="tech-name">Docker + Railway</div>
+          <div class="tech-desc">Containerized deployment on Railway cloud platform</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">📊</div>
+          <div class="tech-name">Apache POI</div>
+          <div class="tech-desc">Generate Excel attendance reports for admins</div>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🌐</div>
+          <div class="tech-name">REST API</div>
+          <div class="tech-desc">Full JSON REST API with controllers for Admin, Teacher, Student &amp; Sync</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ENDPOINTS ─────────────────────────────────────────── -->
+  <section class="section" id="api-ref">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">API Reference</span>
+        <h2 class="section-title">REST Endpoints</h2>
+      </div>
+      <div class="endpoints-wrap">
+        <div class="endpoint-group">
+          <div class="group-title">🔓 Authentication</div>
+          <div class="endpoint-row">
+            <span class="method-tag post">POST</span>
+            <span class="ep-path">/api/auth/login</span>
+            <span class="ep-desc">Login — returns JWT token</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/auth/health</span>
+            <span class="ep-desc">API health check</span>
+          </div>
+        </div>
+        <div class="endpoint-group">
+          <div class="group-title">👑 Admin <span class="role-badge">ADMIN</span></div>
+          <div class="endpoint-row">
+            <span class="method-tag post">POST</span>
+            <span class="ep-path">/api/admin/teachers</span>
+            <span class="ep-desc">Register a new teacher</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag post">POST</span>
+            <span class="ep-path">/api/admin/students</span>
+            <span class="ep-desc">Register a new student</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag post">POST</span>
+            <span class="ep-path">/api/admin/departments</span>
+            <span class="ep-desc">Create department</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/admin/attendance/stats</span>
+            <span class="ep-desc">View attendance statistics</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/admin/attendance/export</span>
+            <span class="ep-desc">Export Excel report</span>
+          </div>
+        </div>
+        <div class="endpoint-group">
+          <div class="group-title">👨‍🏫 Teacher <span class="role-badge">TEACHER</span></div>
+          <div class="endpoint-row">
+            <span class="method-tag post">POST</span>
+            <span class="ep-path">/api/teacher/otp/generate</span>
+            <span class="ep-desc">Generate OTP for class session</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/teacher/subjects</span>
+            <span class="ep-desc">Get assigned subjects</span>
+          </div>
+        </div>
+        <div class="endpoint-group">
+          <div class="group-title">👩‍🎓 Student <span class="role-badge">STUDENT</span></div>
+          <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/student/attendance</span>
+            <span class="ep-desc">View personal attendance stats</span>
+          </div>
+        </div>
+        <div class="endpoint-group">
+          <div class="group-title">🔄 Sync <span class="role-badge">TEACHER</span></div>
+          <div class="endpoint-row">
+            <span class="method-tag post">POST</span>
+            <span class="ep-path">/api/sync/attendance</span>
+            <span class="ep-desc">Bulk sync offline attendance records</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-icon">🎓</span>
+          <span>Offline Attendance System</span>
+        </div>
+        <p class="footer-tagline">Final Year Project — Built with ❤️ by <strong>Karan Perumal</strong></p>
+        <div class="footer-links">
+          <a href="https://github.com/KARANPERUMAL/Offline-Attendance-System_Final-Year-Project" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+        <p class="footer-copy">Spring Boot · Flutter · MySQL · SQLite · JWT · Docker · Railway</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
