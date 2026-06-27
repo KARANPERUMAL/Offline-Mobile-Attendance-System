@@ -220,6 +220,62 @@ async function runAdminStats() {
   }
 }
 
+async function runGetDepts() {
+  const btn  = document.getElementById('deptsBtn');
+  const resp = document.getElementById('resp-depts');
+
+  if (!jwtToken) {
+    resp.innerHTML = buildError('No JWT token! Please login first on the "POST /login" tab.');
+    return;
+  }
+
+  setLoading(btn, true);
+  resp.innerHTML = '<div class="resp-placeholder">Fetching departments...</div>';
+
+  try {
+    const start = Date.now();
+    const res   = await fetch(`${API_BASE}/api/admin/departments`, {
+      headers: { 'Authorization': `Bearer ${jwtToken}` },
+    });
+    const ms   = Date.now() - start;
+    const data = await res.json();
+
+    resp.innerHTML = buildResponse(res.status, data, ms);
+  } catch (err) {
+    resp.innerHTML = buildError(err.message);
+  } finally {
+    setLoading(btn, false);
+  }
+}
+
+async function runGetTeachers() {
+  const btn  = document.getElementById('teachersBtn');
+  const resp = document.getElementById('resp-teachers');
+
+  if (!jwtToken) {
+    resp.innerHTML = buildError('No JWT token! Please login first on the "POST /login" tab.');
+    return;
+  }
+
+  setLoading(btn, true);
+  resp.innerHTML = '<div class="resp-placeholder">Fetching teachers...</div>';
+
+  try {
+    const start = Date.now();
+    const res   = await fetch(`${API_BASE}/api/admin/teachers`, {
+      headers: { 'Authorization': `Bearer ${jwtToken}` },
+    });
+    const ms   = Date.now() - start;
+    const data = await res.json();
+
+    resp.innerHTML = buildResponse(res.status, data, ms);
+  } catch (err) {
+    resp.innerHTML = buildError(err.message);
+  } finally {
+    setLoading(btn, false);
+  }
+}
+
 // ── HELPERS ──────────────────────────────────────────────
 
 function setLoading(btn, loading) {

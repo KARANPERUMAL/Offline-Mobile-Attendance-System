@@ -254,7 +254,9 @@
         <div class="api-tabs">
           <button class="api-tab active" id="tab-health" onclick="switchTab('health')">GET /health</button>
           <button class="api-tab" id="tab-login" onclick="switchTab('login')">POST /login</button>
-          <button class="api-tab" id="tab-admin" onclick="switchTab('admin')">GET /admin/stats</button>
+          <button class="api-tab" id="tab-admin" onclick="switchTab('admin')">GET /stats</button>
+          <button class="api-tab" id="tab-depts" onclick="switchTab('depts')">GET /depts</button>
+          <button class="api-tab" id="tab-teachers" onclick="switchTab('teachers')">GET /teachers</button>
         </div>
 
         <!-- Health Tab -->
@@ -309,6 +311,36 @@
             <button class="run-btn" onclick="runAdminStats()" id="statsBtn">▶ Get Statistics</button>
           </div>
           <div class="api-response" id="resp-admin">
+            <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
+          </div>
+        </div>
+
+        <!-- Depts Tab -->
+        <div class="api-panel hidden" id="panel-depts">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method get">GET</span>
+              <span class="endpoint">/api/admin/departments</span>
+            </div>
+            <p class="req-desc">List all departments. Requires JWT — login first!</p>
+            <button class="run-btn" onclick="runGetDepts()" id="deptsBtn">▶ Get Departments</button>
+          </div>
+          <div class="api-response" id="resp-depts">
+            <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
+          </div>
+        </div>
+
+        <!-- Teachers Tab -->
+        <div class="api-panel hidden" id="panel-teachers">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method get">GET</span>
+              <span class="endpoint">/api/admin/teachers</span>
+            </div>
+            <p class="req-desc">List all registered teachers. Requires JWT — login first!</p>
+            <button class="run-btn" onclick="runGetTeachers()" id="teachersBtn">▶ Get Teachers</button>
+          </div>
+          <div class="api-response" id="resp-teachers">
             <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
           </div>
         </div>
