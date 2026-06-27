@@ -4,7 +4,7 @@
 
 // ── CONFIG ────────────────────────────────────────────────
 // UPDATE THIS after you deploy to Railway!
-const API_BASE = 'https://offline-attendance-system.up.railway.app';
+const API_BASE = 'https://offline-attendance-systemfinal-year-project-production.up.railway.app';
 
 let jwtToken = null;
 
