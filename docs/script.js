@@ -181,7 +181,7 @@ async function runLogin() {
     if (res.ok && data?.data?.token) {
       jwtToken = data.data.token;
       // Add a hint that token was captured
-      data._note = '✓ Token saved — click "GET /admin/stats" tab next!';
+      data._note = '✓ Token saved — admin endpoint tabs can use it now.';
     }
 
     resp.innerHTML = buildResponse(res.status, data, ms);
@@ -192,83 +192,61 @@ async function runLogin() {
   }
 }
 
-async function runAdminStats() {
-  const btn  = document.getElementById('statsBtn');
-  const resp = document.getElementById('resp-admin');
-
-  if (!jwtToken) {
-    resp.innerHTML = buildError('No JWT token! Please login first on the "POST /login" tab.');
-    return;
-  }
-
-  setLoading(btn, true);
-  resp.innerHTML = '<div class="resp-placeholder">Fetching statistics...</div>';
-
-  try {
-    const start = Date.now();
-    const res   = await fetch(`${API_BASE}/api/admin/attendance/stats`, {
-      headers: { 'Authorization': `Bearer ${jwtToken}` },
-    });
-    const ms   = Date.now() - start;
-    const data = await res.json();
-
-    resp.innerHTML = buildResponse(res.status, data, ms);
-  } catch (err) {
-    resp.innerHTML = buildError(err.message);
-  } finally {
-    setLoading(btn, false);
-  }
-}
-
 async function runGetDepts() {
-  const btn  = document.getElementById('deptsBtn');
-  const resp = document.getElementById('resp-depts');
-
-  if (!jwtToken) {
-    resp.innerHTML = buildError('No JWT token! Please login first on the "POST /login" tab.');
-    return;
-  }
-
-  setLoading(btn, true);
-  resp.innerHTML = '<div class="resp-placeholder">Fetching departments...</div>';
-
-  try {
-    const start = Date.now();
-    const res   = await fetch(`${API_BASE}/api/admin/departments`, {
-      headers: { 'Authorization': `Bearer ${jwtToken}` },
-    });
-    const ms   = Date.now() - start;
-    const data = await res.json();
-
-    resp.innerHTML = buildResponse(res.status, data, ms);
-  } catch (err) {
-    resp.innerHTML = buildError(err.message);
-  } finally {
-    setLoading(btn, false);
-  }
+  return runAuthedJson('deptsBtn', 'resp-depts', '/api/admin/departments', 'Fetching departments...');
 }
 
 async function runGetTeachers() {
-  const btn  = document.getElementById('teachersBtn');
-  const resp = document.getElementById('resp-teachers');
+  return runAuthedJson('teachersBtn', 'resp-teachers', '/api/admin/teachers', 'Fetching teachers...');
+}
 
-  if (!jwtToken) {
-    resp.innerHTML = buildError('No JWT token! Please login first on the "POST /login" tab.');
-    return;
-  }
+async function runGetStudents() {
+  return runAuthedJson('studentsBtn', 'resp-students', '/api/admin/students', 'Fetching students...');
+}
+
+async function runGetSubjects() {
+  return runAuthedJson('subjectsBtn', 'resp-subjects', '/api/admin/subjects', 'Fetching subjects...');
+}
+
+async function runAttendanceStats() {
+  return runAuthedJson('statsBtn', 'resp-stats', '/api/admin/attendance/stats', 'Fetching attendance statistics...');
+}
+
+async function runExcelExport() {
+  const btn  = document.getElementById('exportBtn');
+  const resp = document.getElementById('resp-export');
+
+  if (!hasJwt(resp)) return;
 
   setLoading(btn, true);
-  resp.innerHTML = '<div class="resp-placeholder">Fetching teachers...</div>';
+  resp.innerHTML = '<div class="resp-placeholder">Preparing Excel export...</div>';
 
   try {
     const start = Date.now();
-    const res   = await fetch(`${API_BASE}/api/admin/teachers`, {
-      headers: { 'Authorization': `Bearer ${jwtToken}` },
+    const res   = await fetch(`${API_BASE}/api/admin/attendance/export`, {
+      headers: authHeaders(),
     });
     const ms   = Date.now() - start;
-    const data = await res.json();
 
-    resp.innerHTML = buildResponse(res.status, data, ms);
+    if (!res.ok) {
+      const data = await readResponseData(res);
+      resp.innerHTML = buildResponse(res.status, data, ms);
+      return;
+    }
+
+    const blob = await res.blob();
+    const filename = getDownloadFilename(res.headers.get('content-disposition')) || 'attendance-report.xlsx';
+    downloadBlob(blob, filename);
+
+    resp.innerHTML = buildResponse(res.status, {
+      success: true,
+      message: 'Excel report downloaded',
+      data: {
+        filename,
+        contentType: blob.type || res.headers.get('content-type') || 'application/octet-stream',
+        sizeBytes: blob.size,
+      },
+    }, ms);
   } catch (err) {
     resp.innerHTML = buildError(err.message);
   } finally {
@@ -289,9 +267,81 @@ function setLoading(btn, loading) {
       healthBtn: '▶ Run Request',
       loginBtn:  '▶ Run Login',
       statsBtn:  '▶ Get Statistics',
+      deptsBtn:  '▶ Get Departments',
+      teachersBtn: '▶ Get Teachers',
+      studentsBtn: '▶ Get Students',
+      subjectsBtn: '▶ Get Subjects',
+      exportBtn: '⬇ Download Excel',
     };
     btn.innerHTML = labels[btn.id] || '▶ Run';
   }
+}
+
+async function runAuthedJson(buttonId, responseId, path, loadingText) {
+  const btn  = document.getElementById(buttonId);
+  const resp = document.getElementById(responseId);
+
+  if (!hasJwt(resp)) return;
+
+  setLoading(btn, true);
+  resp.innerHTML = `<div class="resp-placeholder">${loadingText}</div>`;
+
+  try {
+    const start = Date.now();
+    const res   = await fetch(`${API_BASE}${path}`, { headers: authHeaders() });
+    const ms   = Date.now() - start;
+    const data = await readResponseData(res);
+
+    resp.innerHTML = buildResponse(res.status, data, ms);
+  } catch (err) {
+    resp.innerHTML = buildError(err.message);
+  } finally {
+    setLoading(btn, false);
+  }
+}
+
+function hasJwt(resp) {
+  if (jwtToken) return true;
+  resp.innerHTML = buildError('No JWT token! Please login first on the "POST /login" tab.');
+  return false;
+}
+
+function authHeaders() {
+  return { 'Authorization': `Bearer ${jwtToken}` };
+}
+
+async function readResponseData(res) {
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    return res.json();
+  }
+
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {
+      success: res.ok,
+      message: text || res.statusText,
+    };
+  }
+}
+
+function getDownloadFilename(contentDisposition) {
+  if (!contentDisposition) return null;
+  const match = contentDisposition.match(/filename\*?=(?:UTF-8'')?["']?([^;"']+)/i);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 function buildResponse(status, data, ms) {

@@ -254,9 +254,12 @@
         <div class="api-tabs">
           <button class="api-tab active" id="tab-health" onclick="switchTab('health')">GET /health</button>
           <button class="api-tab" id="tab-login" onclick="switchTab('login')">POST /login</button>
-          <button class="api-tab" id="tab-admin" onclick="switchTab('admin')">GET /stats</button>
           <button class="api-tab" id="tab-depts" onclick="switchTab('depts')">GET /depts</button>
           <button class="api-tab" id="tab-teachers" onclick="switchTab('teachers')">GET /teachers</button>
+          <button class="api-tab" id="tab-students" onclick="switchTab('students')">GET /students</button>
+          <button class="api-tab" id="tab-subjects" onclick="switchTab('subjects')">GET /subjects</button>
+          <button class="api-tab" id="tab-stats" onclick="switchTab('stats')">GET /stats</button>
+          <button class="api-tab" id="tab-export" onclick="switchTab('export')">GET /export</button>
         </div>
 
         <!-- Health Tab -->
@@ -296,25 +299,6 @@
           </div>
         </div>
 
-        <!-- Admin Tab -->
-        <div class="api-panel hidden" id="panel-admin">
-          <div class="api-request">
-            <div class="req-line">
-              <span class="method get">GET</span>
-              <span class="endpoint">/api/admin/attendance/stats</span>
-            </div>
-            <p class="req-desc">Get attendance statistics. Requires JWT — login first!</p>
-            <div class="req-body-preview">
-              <span class="code-label">Step 1: Login above to get token</span><br/>
-              <span class="code-label">Step 2: Token is auto-used below</span>
-            </div>
-            <button class="run-btn" onclick="runAdminStats()" id="statsBtn">▶ Get Statistics</button>
-          </div>
-          <div class="api-response" id="resp-admin">
-            <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
-          </div>
-        </div>
-
         <!-- Depts Tab -->
         <div class="api-panel hidden" id="panel-depts">
           <div class="api-request">
@@ -341,6 +325,82 @@
             <button class="run-btn" onclick="runGetTeachers()" id="teachersBtn">▶ Get Teachers</button>
           </div>
           <div class="api-response" id="resp-teachers">
+            <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
+          </div>
+        </div>
+
+        <!-- Students Tab -->
+        <div class="api-panel hidden" id="panel-students">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method get">GET</span>
+              <span class="endpoint">/api/admin/students</span>
+            </div>
+            <p class="req-desc">List all registered students. Supports optional department and year filters.</p>
+            <div class="req-body-preview">
+              <span class="code-label">Optional Query:</span>
+              <pre class="code-block">?departmentId=1&amp;yearOfStudy=3</pre>
+            </div>
+            <button class="run-btn" onclick="runGetStudents()" id="studentsBtn">▶ Get Students</button>
+          </div>
+          <div class="api-response" id="resp-students">
+            <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
+          </div>
+        </div>
+
+        <!-- Subjects Tab -->
+        <div class="api-panel hidden" id="panel-subjects">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method get">GET</span>
+              <span class="endpoint">/api/admin/subjects</span>
+            </div>
+            <p class="req-desc">List all subjects. Supports optional department and year filters.</p>
+            <div class="req-body-preview">
+              <span class="code-label">Optional Query:</span>
+              <pre class="code-block">?departmentId=1&amp;yearOfStudy=3</pre>
+            </div>
+            <button class="run-btn" onclick="runGetSubjects()" id="subjectsBtn">▶ Get Subjects</button>
+          </div>
+          <div class="api-response" id="resp-subjects">
+            <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
+          </div>
+        </div>
+
+        <!-- Attendance Stats Tab -->
+        <div class="api-panel hidden" id="panel-stats">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method get">GET</span>
+              <span class="endpoint">/api/admin/attendance/stats</span>
+            </div>
+            <p class="req-desc">Get attendance percentages by student and subject. Requires JWT — login first!</p>
+            <div class="req-body-preview">
+              <span class="code-label">Optional Query:</span>
+              <pre class="code-block">?studentId=1&amp;subjectId=2&amp;departmentId=1&amp;yearOfStudy=3</pre>
+            </div>
+            <button class="run-btn" onclick="runAttendanceStats()" id="statsBtn">▶ Get Statistics</button>
+          </div>
+          <div class="api-response" id="resp-stats">
+            <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
+          </div>
+        </div>
+
+        <!-- Excel Export Tab -->
+        <div class="api-panel hidden" id="panel-export">
+          <div class="api-request">
+            <div class="req-line">
+              <span class="method get">GET</span>
+              <span class="endpoint">/api/admin/attendance/export</span>
+            </div>
+            <p class="req-desc">Download the Excel attendance report generated by the live backend.</p>
+            <div class="req-body-preview">
+              <span class="code-label">Optional Query:</span>
+              <pre class="code-block">?subjectId=2&amp;departmentId=1&amp;yearOfStudy=3</pre>
+            </div>
+            <button class="run-btn" onclick="runExcelExport()" id="exportBtn">⬇ Download Excel</button>
+          </div>
+          <div class="api-response" id="resp-export">
             <div class="resp-placeholder">Login first on the "POST /login" tab →</div>
           </div>
         </div>
@@ -429,14 +489,39 @@
             <span class="ep-desc">Register a new teacher</span>
           </div>
           <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/admin/teachers</span>
+            <span class="ep-desc">List registered teachers</span>
+          </div>
+          <div class="endpoint-row">
             <span class="method-tag post">POST</span>
             <span class="ep-path">/api/admin/students</span>
             <span class="ep-desc">Register a new student</span>
           </div>
           <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/admin/students</span>
+            <span class="ep-desc">List registered students</span>
+          </div>
+          <div class="endpoint-row">
             <span class="method-tag post">POST</span>
             <span class="ep-path">/api/admin/departments</span>
             <span class="ep-desc">Create department</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/admin/departments</span>
+            <span class="ep-desc">List departments</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag post">POST</span>
+            <span class="ep-path">/api/admin/subjects</span>
+            <span class="ep-desc">Create subject</span>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-tag get">GET</span>
+            <span class="ep-path">/api/admin/subjects</span>
+            <span class="ep-desc">List subjects</span>
           </div>
           <div class="endpoint-row">
             <span class="method-tag get">GET</span>
