@@ -20,9 +20,11 @@
         <span>AttendanceOS</span>
       </div>
       <ul class="nav-links">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#architecture">Architecture</a></li>
         <li><a href="#api-demo">Live API</a></li>
+        <li><a href="#download">APK</a></li>
+        <li><a href="#guide">Guide</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#features">Features</a></li>
         <li><a href="#tech-stack">Tech Stack</a></li>
         <li>
           <a href="https://github.com/KARANPERUMAL/Offline-Attendance-System_Final-Year-Project" target="_blank" class="btn-github">
@@ -47,7 +49,7 @@
     </div>
     <div class="hero-content">
       <div class="badge animate-in" style="--delay:0s">
-        <span class="badge-dot"></span> Final Year Project — 2025
+        <span class="badge-dot"></span> Peer-reviewed at ICSIET 2026
       </div>
       <h1 class="hero-title animate-in" style="--delay:0.1s">
         Offline-First<br />
@@ -58,6 +60,12 @@
         Teachers generate OTPs, students mark attendance over local WiFi — then sync to the cloud when online.
       </p>
       <div class="hero-ctas animate-in" style="--delay:0.3s">
+        <a href="#download" class="btn-primary">
+          <span>⬇</span> Download APK
+        </a>
+        <a href="#guide" class="btn-outline">
+          <span>📘</span> App Guide
+        </a>
         <a href="#api-demo" class="btn-primary">
           <span>🚀</span> Try Live API
         </a>
@@ -108,125 +116,6 @@
           </div>
         </div>
         <div class="phone-home-bar"></div>
-      </div>
-      <!-- floating badges -->
-      <div class="float-badge badge-flutter">Flutter 🐦</div>
-      <div class="float-badge badge-spring">Spring Boot 🍃</div>
-      <div class="float-badge badge-offline">📶 Works Offline</div>
-    </div>
-  </section>
-
-  <!-- ─── FEATURES ─────────────────────────────────────────── -->
-  <section class="section" id="features">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">What It Does</span>
-        <h2 class="section-title">Packed with Smart Features</h2>
-        <p class="section-sub">Built to solve a real-world problem — attendance management that doesn't depend on internet connectivity.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card feature-large">
-          <div class="feature-icon-wrap">📡</div>
-          <h3>100% Offline via LAN</h3>
-          <p>Teacher's phone acts as a local HTTP server on port 8181. Students connect over the same WiFi network — no internet required at all. Perfect for classrooms with poor connectivity.</p>
-          <div class="feature-tag">Core Feature</div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-wrap">🔢</div>
-          <h3>OTP-Based Attendance</h3>
-          <p>Teachers generate time-limited OTPs. Students enter the OTP to mark present — prevents proxy attendance.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-wrap">☁️</div>
-          <h3>Cloud Sync</h3>
-          <p>When internet is available, offline SQLite records sync to the central MySQL server via REST API.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-wrap">🔐</div>
-          <h3>JWT Authentication</h3>
-          <p>Stateless JWT tokens with role-based access control — Admin, Teacher, and Student roles with different permissions.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-wrap">📊</div>
-          <h3>Excel Export</h3>
-          <p>Admin can export attendance records as Excel spreadsheets using Apache POI for reports and analysis.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-wrap">📱</div>
-          <h3>Cross-Platform App</h3>
-          <p>Flutter app runs on both Android and iOS from a single codebase with SQLite local storage.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── ARCHITECTURE ──────────────────────────────────────── -->
-  <section class="section section-dark" id="architecture">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">System Design</span>
-        <h2 class="section-title">Architecture Overview</h2>
-        <p class="section-sub">A two-layer architecture: offline LAN for real-time attendance + cloud for sync and admin.</p>
-      </div>
-      <div class="arch-diagram">
-        <div class="arch-layer arch-cloud">
-          <div class="arch-layer-label">☁️ Cloud Layer (Internet)</div>
-          <div class="arch-nodes">
-            <div class="arch-node node-spring">
-              <div class="node-icon">🍃</div>
-              <div class="node-name">Spring Boot API</div>
-              <div class="node-desc">:8080 — JWT REST</div>
-            </div>
-            <div class="arch-connector vertical"></div>
-            <div class="arch-node node-mysql">
-              <div class="node-icon">🗄️</div>
-              <div class="node-name">MySQL DB</div>
-              <div class="node-desc">Central Records</div>
-            </div>
-          </div>
-        </div>
-        <div class="arch-sync-arrow">
-          <div class="sync-label">Sync when online ↕</div>
-        </div>
-        <div class="arch-layer arch-lan">
-          <div class="arch-layer-label">📡 LAN Layer (Offline)</div>
-          <div class="arch-nodes">
-            <div class="arch-node node-teacher">
-              <div class="node-icon">👨‍🏫</div>
-              <div class="node-name">Teacher App</div>
-              <div class="node-desc">Hosts LAN server :8181</div>
-            </div>
-            <div class="arch-connector horizontal">
-              <span class="conn-label">OTP over WiFi</span>
-            </div>
-            <div class="arch-node node-student">
-              <div class="node-icon">👩‍🎓</div>
-              <div class="node-name">Student App</div>
-              <div class="node-desc">Connects to teacher LAN IP</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flow-steps">
-        <div class="flow-step">
-          <div class="step-num">1</div>
-          <div class="step-text">Teacher selects subject &amp; generates OTP in the app</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">
-          <div class="step-num">2</div>
-          <div class="step-text">Phone starts local HTTP server — visible on same WiFi</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">
-          <div class="step-num">3</div>
-          <div class="step-text">Students enter OTP to mark attendance via LAN</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-step">
-          <div class="step-num">4</div>
-          <div class="step-text">Teacher syncs to cloud when internet is available</div>
-        </div>
       </div>
     </div>
   </section>
@@ -408,6 +297,239 @@
     </div>
   </section>
 
+  <!-- ─── DOWNLOAD ───────────────────────────────────────────── -->
+  <section class="section section-dark" id="download">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Android Demo</span>
+        <h2 class="section-title">Download the App APK</h2>
+        <p class="section-sub">Use the release-mode demo APK for testing. Please follow the user guide provided below to optimize the application.</p>
+      </div>
+      <div class="download-layout">
+        <div class="download-panel apk-panel">
+          <div class="download-icon">📱</div>
+          <h3>AttendX Demo Release APK</h3>
+          <p>This build connects to the public Railway backend by default and supports the offline LAN attendance flow between teacher and student phones.</p>
+          <a href="downloads/attendx-demo-release.apk" class="btn-primary download-btn" download>
+            <span>⬇</span> Download APK
+          </a>
+          <div class="apk-meta">
+            <span>Android APK</span>
+            <span>Release mode demo build</span>
+            <span>Not a Play Store production signing release</span>
+          </div>
+        </div>
+      </div>
+      <div class="credentials-wrap">
+        <div class="credential-card">
+          <span class="credential-role">Admin</span>
+          <code>admin</code>
+          <code>Admin@1234</code>
+        </div>
+        <div class="credential-card">
+          <span class="credential-role">Teacher</span>
+          <code>username created by admin</code>
+          <code>Teacher@123</code>
+        </div>
+        <div class="credential-card">
+          <span class="credential-role">Student</span>
+          <code>username created by admin</code>
+          <code>Student@123</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── APP GUIDE ─────────────────────────────────────────── -->
+  <section class="section" id="guide">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">User Guide</span>
+        <h2 class="section-title">How to Use the Mobile App</h2>
+        <p class="section-sub">Follow these steps to test the complete admin setup, offline attendance, local history, and cloud sync workflow.</p>
+      </div>
+      <div class="guide-steps">
+        <div class="guide-step">
+          <div class="guide-num">1</div>
+          <div>
+            <h3>Login as Admin</h3>
+            <p>Open the Admin module and login with the demo admin username and password.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">2</div>
+          <div>
+            <h3>Create Master Data</h3>
+            <p>Create the department, subject, teacher, and student. The app gives created teachers the default password <code>Teacher@123</code> and created students the default password <code>Student@123</code>.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">3</div>
+          <div>
+            <h3>Login on Two Phones</h3>
+            <p>Logout from Admin. Login as Teacher on one mobile and login as Student on another mobile using the credentials you created.</p>
+          </div>
+        </div>
+        <div class="guide-step guide-important">
+          <div class="guide-num">4</div>
+          <div>
+            <h3>Use the Same Local Network</h3>
+            <p>Teacher and Student phones must be connected to the same WiFi or mobile hotspot during attendance marking. Internet is not required for this step.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">5</div>
+          <div>
+            <h3>Set Up the Class</h3>
+            <p>In the Teacher module, fill the class setup details. Select the same department and year that the student belongs to.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">6</div>
+          <div>
+            <h3>Start the 5-Minute Session</h3>
+            <p>Click Generate OTP and start the session. The Teacher receives two codes: a 4-digit Room Code and a 6-digit OTP.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">7</div>
+          <div>
+            <h3>Student Joins and Marks Attendance</h3>
+            <p>In the Student module, enter the Room Code first to connect with the Teacher phone. After connection succeeds, enter the OTP to mark attendance.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">8</div>
+          <div>
+            <h3>Check Local History</h3>
+            <p>After attendance is marked, both Teacher and Student can view history on their mobile apps. After this point, they no longer need to stay on the same network.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">9</div>
+          <div>
+            <h3>Sync and Verify Online</h3>
+            <p>Turn on internet on the Teacher mobile and click Sync Attendance. Then open the Admin module or this webpage's Live API Demo to verify the student's attendance.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ARCHITECTURE ──────────────────────────────────────── -->
+  <section class="section section-dark" id="architecture">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">System Design</span>
+        <h2 class="section-title">Offline Attendance Flow</h2>
+        <p class="section-sub">The app is designed so attendance can be marked locally first and synced to the cloud only when internet is available.</p>
+      </div>
+      <div class="system-diagram">
+        <div class="diagram-band cloud-band">
+          <div class="diagram-band-title">Cloud setup with internet</div>
+          <div class="diagram-row">
+            <div class="diagram-node">
+              <span class="diagram-icon">👑</span>
+              <h3>Admin Module</h3>
+              <p>Create department, subject, teacher, and student.</p>
+            </div>
+            <div class="diagram-arrow">→</div>
+            <div class="diagram-node">
+              <span class="diagram-icon">☁️</span>
+              <h3>Spring Boot + MySQL</h3>
+              <p>Stores users, class setup, subjects, and synced attendance.</p>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-band offline-band">
+          <div class="diagram-band-title">Offline attendance on same WiFi or hotspot</div>
+          <div class="diagram-row">
+            <div class="diagram-node">
+              <span class="diagram-icon">👨‍🏫</span>
+              <h3>Teacher Phone</h3>
+              <p>Starts 5-minute LAN session and shows Room Code + OTP.</p>
+            </div>
+            <div class="diagram-arrow">Room Code →</div>
+            <div class="diagram-node">
+              <span class="diagram-icon">👩‍🎓</span>
+              <h3>Student Phone</h3>
+              <p>Connects to the teacher phone and submits the OTP.</p>
+            </div>
+            <div class="diagram-arrow">→</div>
+            <div class="diagram-node">
+              <span class="diagram-icon">📦</span>
+              <h3>Local History</h3>
+              <p>Attendance is saved locally before internet is available.</p>
+            </div>
+          </div>
+        </div>
+        <div class="diagram-band sync-band">
+          <div class="diagram-band-title">Sync and verify after internet returns</div>
+          <div class="diagram-row">
+            <div class="diagram-node">
+              <span class="diagram-icon">🔄</span>
+              <h3>Teacher Sync</h3>
+              <p>Teacher turns on internet and syncs attendance records.</p>
+            </div>
+            <div class="diagram-arrow">→</div>
+            <div class="diagram-node">
+              <span class="diagram-icon">📊</span>
+              <h3>Admin / Live API</h3>
+              <p>Attendance stats and Excel export become available online.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="architecture-note">
+        <strong>Key idea:</strong> only the setup and sync stages need internet. The actual attendance marking happens locally between the Teacher and Student phones.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FEATURES ─────────────────────────────────────────── -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">What It Does</span>
+        <h2 class="section-title">Packed with Smart Features</h2>
+        <p class="section-sub">Built to solve a real-world problem — attendance management that doesn't depend on internet connectivity.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card feature-large">
+          <div class="feature-icon-wrap">📡</div>
+          <h3>100% Offline via LAN</h3>
+          <p>Teacher's phone acts as a local HTTP server on port 8181. Students connect over the same WiFi network — no internet required at all. Perfect for classrooms with poor connectivity.</p>
+          <div class="feature-tag">Core Feature</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🔢</div>
+          <h3>OTP-Based Attendance</h3>
+          <p>Teachers generate time-limited OTPs. Students enter the OTP to mark present — prevents proxy attendance.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">☁️</div>
+          <h3>Cloud Sync</h3>
+          <p>When internet is available, offline SQLite records sync to the central MySQL server via REST API.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🔐</div>
+          <h3>JWT Authentication</h3>
+          <p>Stateless JWT tokens with role-based access control — Admin, Teacher, and Student roles with different permissions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">📊</div>
+          <h3>Excel Export</h3>
+          <p>Admin can export attendance records as Excel spreadsheets using Apache POI for reports and analysis.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap">📱</div>
+          <h3>Cross-Platform App</h3>
+          <p>Flutter app runs on both Android and iOS from a single codebase with SQLite local storage.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ─── TECH STACK ────────────────────────────────────────── -->
   <section class="section section-dark" id="tech-stack">
     <div class="container">
@@ -575,13 +697,14 @@
           <span class="logo-icon">🎓</span>
           <span>Offline Attendance System</span>
         </div>
-        <p class="footer-tagline">Final Year Project — Built with ❤️ by <strong>Karan Perumal</strong></p>
+        <p class="footer-tagline">Final Year Project — Built by <strong>Karan Perumal</strong></p>
         <div class="footer-links">
           <a href="https://github.com/KARANPERUMAL/Offline-Attendance-System_Final-Year-Project" target="_blank">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
             View on GitHub
           </a>
         </div>
+        <p class="footer-copy">© 2026 Karan Perumal. All rights reserved.</p>
         <p class="footer-copy">Spring Boot · Flutter · MySQL · SQLite · JWT · Docker · Railway</p>
       </div>
     </div>

@@ -54,7 +54,7 @@ function initScrollAnimations() {
 
   // Cards and sections
   document.querySelectorAll(
-    '.feature-card, .tech-card, .endpoint-group, .flow-step, .arch-node'
+    '.feature-card, .download-panel, .credential-card, .guide-step, .diagram-band, .diagram-node, .tech-card, .endpoint-group'
   ).forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';

@@ -7,7 +7,9 @@ class ApiService {
 
   static const String _tokenKey = 'jwt_token';
   static const String _baseUrlKey = 'base_url';
-  static const String _defaultBaseUrl = 'http://192.168.1.1:8080';
+  static const String publicBaseUrl =
+      'https://offline-attendance-systemfinal-year-project-production.up.railway.app';
+  static const String _defaultBaseUrl = publicBaseUrl;
 
   final _storage = const FlutterSecureStorage(
     // Use EncryptedSharedPreferences on Android — much faster than Keystore
@@ -21,12 +23,10 @@ class ApiService {
 
   Future<void> init() async {
     // Read both values in parallel — only storage reads happen here
-    final results = await Future.wait([
-      _storage.read(key: _baseUrlKey),
-      _storage.read(key: _tokenKey),
-    ]);
-    _cachedBaseUrl = results[0] ?? _defaultBaseUrl;
-    _cachedToken   = results[1] ?? '';
+    _cachedBaseUrl = _defaultBaseUrl;
+    final token = await _storage.read(key: _tokenKey);
+    _cachedToken = token ?? '';
+    await _storage.write(key: _baseUrlKey, value: _defaultBaseUrl);
 
     _dio = Dio(BaseOptions(
       baseUrl: _cachedBaseUrl,
@@ -48,10 +48,14 @@ class ApiService {
   }
 
   Future<void> setBaseUrl(String url) async {
-    _cachedBaseUrl = url;
-    _dio.options.baseUrl = url;
-    // Write to storage in background — don't await
-    _storage.write(key: _baseUrlKey, value: url);
+    final normalizedUrl = normalizeBaseUrl(url);
+    _cachedBaseUrl = normalizedUrl;
+    _dio.options.baseUrl = normalizedUrl;
+    await _storage.write(key: _baseUrlKey, value: normalizedUrl);
+  }
+
+  Future<void> usePublicBaseUrl() async {
+    await setBaseUrl(publicBaseUrl);
   }
 
   Future<String?> getBaseUrl() async => _cachedBaseUrl;
@@ -79,23 +83,99 @@ class ApiService {
 
   // ── Auth ──────────────────────────────────────────────────────
   Future<Map<String, dynamic>> login(String username, String password) async {
-    final response = await _dio.post('/api/auth/login',
-        data: {'username': username, 'password': password});
-    return response.data['data'];
+    try {
+      await usePublicBaseUrl();
+      final response = await _dio.post('/api/auth/login',
+          data: {'username': username, 'password': password});
+      return response.data['data'];
+    } on DioException catch (e) {
+      throw Exception(_friendlyDioError(e));
+    }
+  }
+
+  static String normalizeBaseUrl(String value) {
+    var url = value.trim();
+    if (url.isEmpty) {
+      throw const FormatException('Server URL is required.');
+    }
+
+    url = url.replaceAll(RegExp(r'/+$'), '');
+    final hasScheme = RegExp(r'^[a-zA-Z][a-zA-Z0-9+.-]*://').hasMatch(url);
+    if (!hasScheme) {
+      final scheme = _isLocalServer(url) ? 'http' : 'https';
+      url = '$scheme://$url';
+    }
+
+    final uri = Uri.tryParse(url);
+    if (uri == null || uri.host.trim().isEmpty) {
+      throw const FormatException('Enter a valid server URL.');
+    }
+
+    final host = uri.host.toLowerCase();
+    if (host == 'production.up.railway.app' ||
+        host == 'up.railway.app' ||
+        host == 'railway.app') {
+      throw const FormatException(
+        'Enter the full Railway app URL, not only production.up.railway.app.',
+      );
+    }
+
+    if (uri.scheme != 'http' && uri.scheme != 'https') {
+      throw const FormatException(
+          'Server URL must start with http:// or https://.');
+    }
+
+    return uri.replace(path: '', query: null, fragment: null).toString();
+  }
+
+  static bool _isLocalServer(String url) {
+    final host = url.split('/').first.split(':').first.toLowerCase();
+    return host == 'localhost' ||
+        host == '10.0.2.2' ||
+        RegExp(r'^(\d{1,3}\.){3}\d{1,3}$').hasMatch(host);
+  }
+
+  String _friendlyDioError(DioException error) {
+    if (error.response?.statusCode == 401) {
+      return 'Invalid username or password.';
+    }
+
+    final message = error.message ?? '';
+    final lowLevelError = error.error?.toString() ?? '';
+    if (message.contains('Failed host lookup') ||
+        lowLevelError.contains('Failed host lookup') ||
+        lowLevelError.contains('No address associated with hostname')) {
+      return 'Cannot reach the cloud server from this phone. Connect to Wi-Fi or mobile data, then open $publicBaseUrl/api/auth/health in Chrome to test.';
+    }
+
+    if (error.type == DioExceptionType.connectionTimeout ||
+        error.type == DioExceptionType.receiveTimeout ||
+        error.type == DioExceptionType.sendTimeout) {
+      return 'Server did not respond in time. Check your internet connection or try again.';
+    }
+
+    if (error.type == DioExceptionType.connectionError) {
+      return 'Could not connect to the cloud server. Check Wi-Fi/mobile data and try again.';
+    }
+
+    return 'Unable to login right now. Please try again.';
   }
 
   // ── Teacher ───────────────────────────────────────────────────
-  Future<Map<String, dynamic>> generateOtp(int subjectId, String timeSlot) async {
+  Future<Map<String, dynamic>> generateOtp(
+      int subjectId, String timeSlot) async {
     final response = await _dio.post('/api/teacher/otp/generate',
         data: {'subjectId': subjectId, 'timeSlot': timeSlot});
     return response.data['data'];
   }
 
-  Future<List<dynamic>> getSubjects({int? departmentId, int? yearOfStudy}) async {
+  Future<List<dynamic>> getSubjects(
+      {int? departmentId, int? yearOfStudy}) async {
     final params = <String, dynamic>{};
     if (departmentId != null) params['departmentId'] = departmentId;
     if (yearOfStudy != null) params['yearOfStudy'] = yearOfStudy;
-    final response = await _dio.get('/api/teacher/subjects', queryParameters: params);
+    final response =
+        await _dio.get('/api/teacher/subjects', queryParameters: params);
     return response.data['data'];
   }
 
@@ -108,8 +188,10 @@ class ApiService {
   }
 
   // ── Sync ──────────────────────────────────────────────────────
-  Future<Map<String, dynamic>> syncAttendance(List<Map<String, dynamic>> records) async {
-    final response = await _dio.post('/api/sync/attendance', data: {'records': records});
+  Future<Map<String, dynamic>> syncAttendance(
+      List<Map<String, dynamic>> records) async {
+    final response =
+        await _dio.post('/api/sync/attendance', data: {'records': records});
     return response.data['data'];
   }
 
@@ -134,12 +216,14 @@ class ApiService {
   }
 
   // ── Admin — Register ──────────────────────────────────────────
-  Future<Map<String, dynamic>> registerTeacher(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> registerTeacher(
+      Map<String, dynamic> data) async {
     final response = await _dio.post('/api/admin/teachers', data: data);
     return response.data['data'];
   }
 
-  Future<Map<String, dynamic>> registerStudent(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> registerStudent(
+      Map<String, dynamic> data) async {
     final response = await _dio.post('/api/admin/students', data: data);
     return response.data['data'];
   }
@@ -150,9 +234,10 @@ class ApiService {
     return response.data['data'];
   }
 
-  Future<Map<String, dynamic>> createDepartment(String name, String code) async {
-    final response = await _dio.post('/api/admin/departments',
-        data: {'name': name, 'code': code});
+  Future<Map<String, dynamic>> createDepartment(
+      String name, String code) async {
+    final response = await _dio
+        .post('/api/admin/departments', data: {'name': name, 'code': code});
     return response.data['data'];
   }
 
@@ -170,7 +255,8 @@ class ApiService {
     int credits = 3,
   }) async {
     final response = await _dio.post('/api/admin/subjects', data: {
-      'name': name, 'code': code,
+      'name': name,
+      'code': code,
       'departmentId': departmentId,
       'yearOfStudy': yearOfStudy,
       'credits': credits,
@@ -180,22 +266,27 @@ class ApiService {
 
   // ── Admin — Attendance Stats ──────────────────────────────────
   Future<List<dynamic>> getAttendanceStats({
-    int? studentId, int? subjectId, int? departmentId, int? yearOfStudy,
+    int? studentId,
+    int? subjectId,
+    int? departmentId,
+    int? yearOfStudy,
   }) async {
     final params = <String, dynamic>{};
-    if (studentId != null)    params['studentId']    = studentId;
-    if (subjectId != null)    params['subjectId']    = subjectId;
+    if (studentId != null) params['studentId'] = studentId;
+    if (subjectId != null) params['subjectId'] = subjectId;
     if (departmentId != null) params['departmentId'] = departmentId;
-    if (yearOfStudy != null)  params['yearOfStudy']  = yearOfStudy;
-    final response = await _dio.get('/api/admin/attendance/stats', queryParameters: params);
+    if (yearOfStudy != null) params['yearOfStudy'] = yearOfStudy;
+    final response =
+        await _dio.get('/api/admin/attendance/stats', queryParameters: params);
     return response.data['data'];
   }
 
   // ── Admin — Excel Export ──────────────────────────────────────
-  Future<List<int>> exportAttendanceExcel({int? departmentId, int? yearOfStudy}) async {
+  Future<List<int>> exportAttendanceExcel(
+      {int? departmentId, int? yearOfStudy}) async {
     final params = <String, dynamic>{};
     if (departmentId != null) params['departmentId'] = departmentId;
-    if (yearOfStudy != null)  params['yearOfStudy']  = yearOfStudy;
+    if (yearOfStudy != null) params['yearOfStudy'] = yearOfStudy;
     final response = await _dio.get(
       '/api/admin/attendance/export',
       queryParameters: params,
@@ -216,11 +307,13 @@ class ApiService {
     return response.data['data'];
   }
 
-  Future<List<dynamic>> getStudents({int? departmentId, int? yearOfStudy}) async {
+  Future<List<dynamic>> getStudents(
+      {int? departmentId, int? yearOfStudy}) async {
     final params = <String, dynamic>{};
     if (departmentId != null) params['departmentId'] = departmentId;
-    if (yearOfStudy != null)  params['yearOfStudy']  = yearOfStudy;
-    final response = await _dio.get('/api/admin/students', queryParameters: params);
+    if (yearOfStudy != null) params['yearOfStudy'] = yearOfStudy;
+    final response =
+        await _dio.get('/api/admin/students', queryParameters: params);
     return response.data['data'];
   }
 }
