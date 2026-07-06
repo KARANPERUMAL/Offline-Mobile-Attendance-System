@@ -41,24 +41,25 @@ function initNavbar() {
 function initScrollAnimations() {
   const observer = new IntersectionObserver(
     (entries) => {
+      let delay = 0;
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-          observer.unobserve(entry.target);
+          const el = entry.target;
+          el.style.transitionDelay = `${delay}s`;
+          el.classList.add('revealed');
+          observer.unobserve(el);
+          delay += 0.05; // Clean stagger only for elements appearing in same frame
         }
       });
     },
-    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    { threshold: 0.05, rootMargin: '0px 0px -30px 0px' }
   );
 
   // Cards and sections
   document.querySelectorAll(
     '.feature-card, .download-panel, .credential-card, .guide-step, .diagram-band, .diagram-node, .tech-card, .endpoint-group'
-  ).forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(24px)';
-    el.style.transition = `opacity 0.5s ease ${i * 0.06}s, transform 0.5s ease ${i * 0.06}s`;
+  ).forEach((el) => {
+    el.classList.add('reveal-item');
     observer.observe(el);
   });
 }

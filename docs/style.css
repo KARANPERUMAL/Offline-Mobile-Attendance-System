@@ -73,6 +73,20 @@ body {
   animation-delay: var(--delay, 0s);
 }
 
+/* --- Scroll Reveal Animations --- */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* --- Navbar ---------------------------------------- */
 .navbar {
   position: fixed;
@@ -501,7 +515,7 @@ body {
 .endpoint-group {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 .download-panel::before,
 .credential-card::before,
